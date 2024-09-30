@@ -1,0 +1,74 @@
+select
+pp.IDPessoa,
+Nome,
+Razao as 'Razao Social',
+CpfCnpj as 'CPF/CNPJ',
+Identidade,
+InscMunicipal as 'Inscricao Municipal',
+InscEstadual as 'Inscricao Estadual',
+
+CASE Sexo
+WHEN 0 THEN 'M'
+WHEN 1 THEN 'F'
+ELSE 'Indefinido'
+end as Sexo,
+
+FORMAT (DataNascimento, 'dd/MM/yyyy') as "Data de Nascimento",
+
+CASE EstadoCivil
+WHEN 0 then 'Solteiro'
+WHEN 1 then 'Casado(a)'
+WHEN 2 then 'Divorciado(a)'
+WHEN 3 then 'Viuvo(a)'
+WHEN 4 then 'Outros'
+end as "Estado Civil",
+
+Naturalidade,
+Nacionalidade,
+pf.Profissao as "Profissao",
+pp.Email as "E-Mail",
+pp.Site,
+pp.Observacao as "Observacao",
+
+CONCAT
+('Rua: ',en.Logradouro,' Numero: ', en.Numero, ' Complemento: ',en.Complemento,
+' Bairro: ',br.Bairro,' Regiao: ',re.Regiao,' Cidade: ',cid.Cidade,' Cep: ',en.Cep,
+' Telefone1: ',en.Fone1, ' Telefone2: ',en.Fone2) as 'Endereco Cobranca',
+
+CONCAT
+('Rua: ',en1.Logradouro,' Numero: ', en1.Numero, ' Complemento: ',en1.Complemento,
+' Bairro: ',br1.Bairro,' Regiao: ',re1.Regiao,' Cidade: ',cid1.Cidade,' Cep: ',en1.Cep,
+' Telefone1: ',en1.Fone1, ' Telefone2: ',en1.Fone2) as 'Endereco Residencial',
+
+CONCAT
+('Rua: ',en2.Logradouro,' Numero: ', en2.Numero, ' Complemento: ',en2.Complemento,
+' Bairro: ',br2.Bairro,' Regiao: ',re2.Regiao,' Cidade: ',cid2.Cidade,' Cep: ',en2.Cep,
+' Telefone1: ',en2.Fone1, ' Telefone2: ',en2.Fone2) as 'Endereco Comercial'
+
+from GL_Pessoa as pp
+
+left join GL_Profissao as pf ON pp.IDProfissao = pf.IDProfissao
+
+left join GL_PessoaEndereco as pe ON pp.IDPessoa = pe.IDPessoa AND pe.TipoEndereco = '0'
+left join GL_Endereco as en ON pe.IDEndereco = en.IDEndereco
+
+left join GL_PessoaEndereco as pe1 ON pp.IDPessoa = pe1.IDPessoa AND pe1.TipoEndereco = '1'
+left join GL_Endereco as en1 ON pe1.IDEndereco = en1.IDEndereco
+
+left join GL_PessoaEndereco as pe2 ON pp.IDPessoa = pe2.IDPessoa AND pe2.TipoEndereco = '2'
+left join GL_Endereco as en2 ON pe2.IDEndereco = en2.IDEndereco
+
+
+left join GL_Bairro as br ON en.IDBairro = br.IDBairro
+left join GL_Regiao as re ON en.IDRegiao = re.IDRegiao
+left join GL_Cidade as cid ON en.IDCidade = cid.IDCidade
+
+left join GL_Bairro as br1 ON en1.IDBairro = br1.IDBairro
+left join GL_Regiao as re1 ON en1.IDRegiao = re1.IDRegiao
+left join GL_Cidade as cid1 ON en1.IDCidade = cid1.IDCidade
+
+left join GL_Bairro as br2 ON en2.IDBairro = br2.IDBairro
+left join GL_Regiao as re2 ON en2.IDRegiao = re2.IDRegiao
+left join GL_Cidade as cid2 ON en2.IDCidade = cid2.IDCidade
+
+order by pp.IDPessoa asc

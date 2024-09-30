@@ -1,0 +1,30 @@
+select
+ac.IdAcordo as Acordo,
+format (ac.DataBaseAcordo, 'dd/MM/yyyy') as 'Data Acordo',
+ta.Descricao as 'Tipo Acordo',
+co.IDContrato as Contrato,
+pe.Nome as Locatario,
+ac.ValorNegociado as 'Valor Acordo',
+hi.Historico,
+cr.ComplementoHistorico as 'Parcela Acordo',
+cr.ValorLancto as Valor,
+cr.ValorCorrecao as Correcao,
+cr.ValorJuros as Juros,
+cr.ValorMulta,
+cr.ValorDesconto,
+(cr.ValorLancto + cr.ValorCorrecao + cr.ValorJuros + cr.ValorMulta + cr.ValorDesconto) as Total,
+format (cr.DataVencimento, 'dd/MM/yyyy') as Vencimento,
+format (cr.MesFaturamento, 'MM/yyyy') as 'Mes Faturamento'
+
+from GL_ContaReceber cr
+
+join GL_Acordo ac on cr.IdAcordo = ac.IdAcordo
+join GL_Historico hi on cr.IdHistorico = hi.IDHistorico
+join GL_Contrato co on ac.IdContrato = co.IDContrato
+join GL_TipoAcordo ta on ac.IdTipoAcordo = ta.IdTipoAcordo
+join GL_ContratoPessoa cp on co.IDContrato = cp.IDContrato and cp.TipoPessoa = 0 and cp.Principal = 1
+join gl_pessoa pe on cp.IDPessoa = pe.IDPessoa
+
+where ac.DataBaseAcordo >= '07/12/2023'
+
+order by ac.IdAcordo

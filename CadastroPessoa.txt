@@ -1,0 +1,95 @@
+select
+pp.IDPessoa,
+Nome,
+Razao as 'Razao Social',
+CpfCnpj as 'CPF/CNPJ',
+Identidade,
+InscMunicipal as 'Inscricao Municipal',
+InscEstadual as 'Inscricao Estadual',
+
+CASE Sexo
+WHEN 0 THEN 'M'
+WHEN 1 THEN 'F'
+ELSE 'Indefinido'
+end as Sexo,
+
+FORMAT (DataNascimento, 'dd/MM/yyyy') as "Data de Nascimento",
+
+CASE EstadoCivil
+WHEN 0 then 'Solteiro'
+WHEN 1 then 'Casado(a)'
+WHEN 2 then 'Divorciado(a)'
+WHEN 3 then 'Viuvo(a)'
+WHEN 4 then 'Outros'
+end as "Estado Civil",
+
+Naturalidade,
+Nacionalidade,
+pf.Profissao as Profissao,
+pp.Email as "E-Mail",
+pp.Site,
+pp.Observacao as "Observacao",
+
+en.Logradouro as "Logradouro Cobranca",
+en.Numero as "Numero Cobranca",
+en.Complemento as "Complemento Cobranca",
+br.Bairro as "Bairro Cobranca",
+re.Regiao "Regiao Cobranca",
+cid.Cidade as "Cidade Cobranca",
+en.Cep as "Cep Cobranca",
+en.Fone1 as "Telefone Cobranca 1",
+en.Fone2 as "Telefone Cobranca 2",
+en.Fone3 as "Telefone Cobranca 3",
+en.Fone4 as "Telefone Cobranca 4",
+
+en1.Logradouro as "Logradouro Residencial",
+en1.Numero as "Numero Residencial",
+en1.Complemento as "Complemento Residencial",
+br1.Bairro as "Bairro Residencial",
+re1.Regiao "Regiao Residencial",
+cid1.Cidade as "Cidade Residencial",
+en1.Cep as "Cep Residencial",
+en1.Fone1 as "Telefone Residencial 1",
+en1.Fone2 as "Telefone Residencial 2",
+en1.Fone3 as "Telefone Residencial 3",
+en1.Fone4 as "Telefone Residencial 4",
+
+en2.Logradouro as "Logradouro Comercial",
+en2.Numero as "Numero Comercial",
+en2.Complemento as "Complemento Comercial",
+br2.Bairro as "Bairro Comercial",
+re2.Regiao "Regiao Comercial",
+cid2.Cidade as "Cidade Comercial",
+en2.Cep as "Cep Comercial",
+en2.Fone1 as "Telefone Comercial 1",
+en2.Fone2 as "Telefone Comercial 2",
+en2.Fone3 as "Telefone Comercial 3",
+en2.Fone4 as "Telefone Comercial 4"
+
+from GL_Pessoa as pp
+
+left join GL_Profissao as pf ON pp.IDProfissao = pf.IDProfissao
+
+left join GL_PessoaEndereco as pe ON pp.IDPessoa = pe.IDPessoa AND pe.TipoEndereco = '0'
+left join GL_Endereco as en ON pe.IDEndereco = en.IDEndereco
+
+left join GL_PessoaEndereco as pe1 ON pp.IDPessoa = pe1.IDPessoa AND pe1.TipoEndereco = '1'
+left join GL_Endereco as en1 ON pe1.IDEndereco = en1.IDEndereco
+
+left join GL_PessoaEndereco as pe2 ON pp.IDPessoa = pe2.IDPessoa AND pe2.TipoEndereco = '2'
+left join GL_Endereco as en2 ON pe2.IDEndereco = en2.IDEndereco
+
+
+left join GL_Bairro as br ON en.IDBairro = br.IDBairro
+left join GL_Regiao as re ON en.IDRegiao = re.IDRegiao
+left join GL_Cidade as cid ON en.IDCidade = cid.IDCidade
+
+left join GL_Bairro as br1 ON en1.IDBairro = br1.IDBairro
+left join GL_Regiao as re1 ON en1.IDRegiao = re1.IDRegiao
+left join GL_Cidade as cid1 ON en1.IDCidade = cid1.IDCidade
+
+left join GL_Bairro as br2 ON en2.IDBairro = br2.IDBairro
+left join GL_Regiao as re2 ON en2.IDRegiao = re2.IDRegiao
+left join GL_Cidade as cid2 ON en2.IDCidade = cid2.IDCidade
+
+order by pp.IDPessoa asc

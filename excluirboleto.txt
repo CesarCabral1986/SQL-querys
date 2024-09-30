@@ -1,0 +1,6 @@
+begin transaction;
+
+delete from GL_BoletoComposicao where NumBoletoCNAB = 84591
+delete from GL_Boleto where NumBoletoCNAB = 84591
+
+commit;

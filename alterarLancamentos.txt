@@ -1,0 +1,11 @@
+begin transaction;
+
+update GL_ContaReceber
+set IdHistorico = 25
+where IdLanctoContaReceber in (25665, 25664, 25663);
+
+update GL_ContaProprietario
+set IdHistorico = 25
+where IdLanctoContaReceber in (25665, 25664, 25663) and IdHistorico = 40;
+
+commit;
